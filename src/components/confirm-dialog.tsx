@@ -3,7 +3,6 @@ import {
   AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -13,7 +12,7 @@ import { Button } from '@/components/ui/button'
 interface ConfirmDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  title: React.ReactNode
+  name: React.ReactNode
   disabled?: boolean
   desc: React.JSX.Element | string
   cancelBtnText?: string
@@ -27,8 +26,7 @@ interface ConfirmDialogProps {
 
 export function ConfirmDialog(props: ConfirmDialogProps) {
   const {
-    title,
-    desc,
+    name,
     children,
     className,
     confirmText,
@@ -43,10 +41,8 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
     <AlertDialog {...actions}>
       <AlertDialogContent className={cn(className && className)}>
         <AlertDialogHeader className='text-left'>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription asChild>
-            <div>{desc}</div>
-          </AlertDialogDescription>
+          <AlertDialogTitle>{name}</AlertDialogTitle>
+          
         </AlertDialogHeader>
         {children}
         <AlertDialogFooter>

@@ -70,6 +70,11 @@ export const sidebarData: SidebarData = {
           icon: IconChecklist,
         },
         {
+          title: 'Marketplaces',
+          url: '/marketplaces',
+          icon: IconChecklist,
+        },
+        {
           title: 'Tasks',
           url: '/tasks',
           icon: IconChecklist,

@@ -1,0 +1,46 @@
+import { Header } from '@/components/layout/header'
+import { Main } from '@/components/layout/main'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { Search } from '@/components/search'
+import { ThemeSwitch } from '@/components/theme-switch'
+import { columns } from './components/marketplaces-columns'
+import { MarketplacesDialogs } from './components/marketplaces-dialogs'
+import { MarketplacesPrimaryButtons } from './components/marketplaces-primary-buttons'
+import { MarketplacesTable } from './components/marketplaces-table'
+import MarketplacesProvider from './context/marketplaces-context'
+import { marketplaceListSchema } from './data/schema'
+import { marketplaces } from './data/marketplaces'
+
+export default function Marketplaces() {
+  // Parse marketplace list
+  const marketplaceList = marketplaceListSchema.parse(marketplaces)
+
+  return (
+    <MarketplacesProvider>
+      <Header fixed>
+        <Search />
+        <div className='ml-auto flex items-center space-x-4'>
+          <ThemeSwitch />
+          <ProfileDropdown />
+        </div>
+      </Header>
+
+      <Main>
+        <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
+          <div>
+            <h2 className='text-2xl font-bold tracking-tight'>Marketplace List</h2>
+            <p className='text-muted-foreground'>
+              Manage your Marketplaces and their roles here.
+            </p>
+          </div>
+          <MarketplacesPrimaryButtons />
+        </div>
+        <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
+          <MarketplacesTable data={marketplaceList} columns={columns} />
+        </div>
+      </Main>
+
+      <MarketplacesDialogs />
+    </MarketplacesProvider>
+  )
+}
