@@ -60,6 +60,16 @@ export const sidebarData: SidebarData = {
           icon: IconChecklist,
         },
         {
+          title: 'Customers',
+          url: '/customers',
+          icon: IconChecklist,
+        },
+        {
+          title: 'Customers create',
+          url: '/customers/customerCrud',
+          icon: IconChecklist,
+        },
+        {
           title: 'Brands',
           url: '/brands',
           icon: IconChecklist,

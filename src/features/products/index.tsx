@@ -9,27 +9,26 @@ import ProductsProvider from './context/products-context'
 
 
 interface Product {
-  id: number;
+  id?: number;
   name: string;
-  selling_price: number;
+  price: number;
 }
 
 export default function Products() {
   const [products, setProducts] = useState<Product[]>([]);
   const [name, setName] = useState('');
-  const [selling_price, setSellingPrice] = useState<number | string>('');
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [price, setPrice] = useState<number | string>('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   // Function to fetch products
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/products'); // Adjust the URL as needed
+      const response = await axios.get('http://localhost:8004/api/customers'); // Adjust the URL as needed
       setProducts(response.data); // Assuming the response data is an array of products
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      setError('Failed to fetch products');
+      setError('Failed to fetch customers');
     } finally {
       setLoading(false);
     }
@@ -48,10 +47,10 @@ export default function Products() {
 
     try {
         // Make your API call here
-        await axios.post('http://localhost:8000/api/products/store', { name, selling_price });
+        await axios.post('http://localhost:8004/api/customers/store');
         // Optionally, you can reset the form fields here
         setName('');
-        setSellingPrice(0);
+        setPrice(0);
 
         await fetchProducts();
         
@@ -77,16 +76,14 @@ export default function Products() {
 
   // Set the form for editing
   const handleEdit = (product: Product) => {
-    setEditingProduct(product);
     setName(product.name);
-    setSellingPrice(product.selling_price);
+    setPrice(product.price);
   };
 
   // Reset the form
   const resetForm = () => {
-    setEditingProduct(null);
     setName('');
-    setSellingPrice('');
+    setPrice('');
   };
 
   if (loading) return <div>Loading...</div>;
@@ -112,9 +109,9 @@ export default function Products() {
             />
             <input
                 type="number"
-                placeholder="Selling Price"
-                value={selling_price}
-                onChange={(e) => setSellingPrice(Number(e.target.value))}
+                placeholder="Price"
+                value={price}
+                onChange={(e) => setPrice(Number(e.target.value))}
                 required
             />
             <button type="submit" disabled={loading}>
@@ -128,6 +125,7 @@ export default function Products() {
               <tr>
                 <th>Name</th>
                 <th>Price</th>
+                <th>Image</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -135,7 +133,8 @@ export default function Products() {
               {products.map((product) => (
                 <tr key={product.id}>
                   <td>{product.name}</td>
-                  <td>{product.selling_price}</td>
+                  <td>{product.price}</td>
+                  <td>{product.image_url}</td>
                   <td>
                     <button onClick={() => handleEdit(product)}>Edit</button>
                     <button onClick={() => handleDelete(product.id)}>Delete</button>
