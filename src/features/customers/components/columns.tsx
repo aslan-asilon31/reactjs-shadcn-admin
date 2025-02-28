@@ -89,29 +89,35 @@ export const columns : ColumnDef<Customer>[] =  [
         const [error, setError] = useState<string | null>(null);
     
         const handleDeleteCustomer = async (customerId: string) => {
-          alert(customerId)
-            try {
-                setLoading(true); 
-                await axios.delete(`http://localhost:8000/api/customers/${customerId}`);
-                setCustomers(customers.filter(customer => customer.id !== customerId));
-                alert('berhasil')
-            } catch (err) {
-                setError('Failed to delete customer'); 
-                alert('gagal')
-                alert(err)
-            } finally {
-                setLoading(false); 
+            // Show confirmation dialog
+            const confirmDelete = window.confirm("Apakah kamu yakin ingin menghapus data ini ?");
+            
+            if (confirmDelete) {
+                try {
+                    setLoading(true); 
+                    await axios.delete(`http://localhost:8001/api/customers/${customerId}`);
+                    setCustomers(customers.filter(customer => customer.id !== customerId));
+                    alert('Customer deleted successfully');
+                } catch (err) {
+                    setError('Failed to delete customer'); 
+                    alert('Error: ' + err.message); // Display the error message
+                } finally {
+                    setLoading(false); // Ensure loading state is reset
+                }
+            } else {
+                alert('Deletion canceled'); 
             }
         };
-        
+      
+      
         const handleEdit = () => {
             window.location.href = `/customers/customerCrud?id=${customerId}`;
         };
 
         return (
             <div className='flex space-x-2'>
-                <Button onClick={handleEdit}>Edit</Button>
-                <Button onClick={() => handleDeleteCustomer(customerId)} disabled={loading}>
+                <Button className="bg-green-700" onClick={handleEdit}>Edit</Button>
+                <Button className="bg-red-700" onClick={() => handleDeleteCustomer(customerId)} disabled={loading}>
                   {loading ? 'Deleting...' : 'Delete'}
                 </Button>
             </div>

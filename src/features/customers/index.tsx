@@ -18,9 +18,8 @@ import {
 interface Customer {
     id?: number;
     name: string;
-    balance: string;
-    is_activated: string;
-
+    balance: number;
+    is_activated: number;
 }
 
 const Customers: React.FC = () => {
@@ -35,12 +34,12 @@ const Customers: React.FC = () => {
           setLoading(true);
           setError(null);
           try {
-              const response = await axios.get('http://localhost:8000/api/customers');
+              const response = await axios.get('http://localhost:8001/api/customers');
+              console.log(response.data.data);
               // Access the customer data correctly              
               const customerData = response.data.data.data; // Adjusted to access the array
               setCustomers(customerData);
-
-
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           } catch (err) {
               setError('Failed to fetch customers');
           } finally {
@@ -77,7 +76,7 @@ const Customers: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.post('http://localhost:8000/api/customers/', newCustomer);
+        const response = await axios.post('http://localhost:8001/api/customers/', newCustomer);
         setCustomers([...customers, response.data.data.data]); // Assuming the response contains the created customer
         setNewCustomer({ name: '', balance: 0, is_activated: 1 }); // Reset form
         
@@ -96,7 +95,7 @@ const handleEditCustomer = async (customer: Customer) => {
 const handleUpdateCustomer = async () => {
     if (editingCustomer) {
         try {
-            const response = await axios.put(`http://localhost:8000/api/customers/${editingCustomer.id}`, newCustomer);
+            const response = await axios.put(`http://localhost:8001/api/customers/${editingCustomer.id}`, newCustomer);
             setCustomers(customers.map(c => (c.id === editingCustomer.id ? response.data.data : c))); // Update the customer in the list
             setEditingCustomer(null); // Clear editing state
             setNewCustomer({ name: '', balance: 0, is_activated: 1 }); // Reset form
@@ -115,7 +114,7 @@ const handleUpdateCustomer = async () => {
     const handleDeleteCustomer = async (id: string) => {
         try {
             setLoading(true);
-            await axios.delete(`http://localhost:8000/api/customers/${id}`);
+            await axios.delete(`http://localhost:8001/api/customers/${id}`);
             setCustomers(customers.filter(customer => customer.id !== id)); 
 
             
@@ -139,38 +138,8 @@ const handleUpdateCustomer = async () => {
                 <Button onClick={() => window.location.href = '/customers/customerCrud'} className="text-white p-2 rounded">
                     Add Customer
                 </Button>
-            {error && <p>Error: {error}</p>}
 
-
-                    <DataTable columns={columns} data={customers} />
-
-
-
-            <Table className="w-['150px']">
-                <TableCaption>A list of your customers.</TableCaption>
-                <TableHeader>
-                    <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Balance</TableHead>
-                    <TableHead>Is Activate</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-
-                    {customers.map(customer => (
-                    <TableRow key={customer.id}>
-                        <TableCell className="font-medium">{customer.name}</TableCell>
-                        <TableCell>{customer.balance}</TableCell>
-                        <TableCell>{customer.is_activated}</TableCell>
-                        <TableCell className="text-right">
-                            <Button className="bg-green-500" onClick={() => handleEdit(customer)}>Edit</Button>
-                            <Button className="bg-red-500" onClick={() => handleDeleteCustomer(customer.id!)}>Delete</Button>
-                        </TableCell>
-                    </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+                <DataTable columns={columns} data={customers} />
 
           </div>
 

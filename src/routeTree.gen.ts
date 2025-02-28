@@ -74,8 +74,11 @@ const AuthenticatedSettingsAppearanceLazyImport = createFileRoute(
 const AuthenticatedSettingsAccountLazyImport = createFileRoute(
   '/_authenticated/settings/account',
 )()
-const AuthenticatedCustomersCustomerCrudLazyImport = createFileRoute(
-  '/_authenticated/customers/customerCrud',
+const AuthenticatedCustomersCustomerEditLazyImport = createFileRoute(
+  '/_authenticated/customers/customer-edit',
+)()
+const AuthenticatedCustomersCustomerCreateLazyImport = createFileRoute(
+  '/_authenticated/customers/customer-create',
 )()
 
 // Create/Update Routes
@@ -320,13 +323,24 @@ const AuthenticatedSettingsAccountLazyRoute =
     ),
   )
 
-const AuthenticatedCustomersCustomerCrudLazyRoute =
-  AuthenticatedCustomersCustomerCrudLazyImport.update({
-    id: '/customers/customerCrud',
-    path: '/customers/customerCrud',
+const AuthenticatedCustomersCustomerEditLazyRoute =
+  AuthenticatedCustomersCustomerEditLazyImport.update({
+    id: '/customers/customer-edit',
+    path: '/customers/customer-edit',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any).lazy(() =>
-    import('./routes/_authenticated/customers/customerCrud.lazy').then(
+    import('./routes/_authenticated/customers/customer-edit.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const AuthenticatedCustomersCustomerCreateLazyRoute =
+  AuthenticatedCustomersCustomerCreateLazyImport.update({
+    id: '/customers/customer-create',
+    path: '/customers/customer-create',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/customers/customer-create.lazy').then(
       (d) => d.Route,
     ),
   )
@@ -440,11 +454,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authIndexImport
       parentRoute: typeof rootRoute
     }
-    '/_authenticated/customers/customerCrud': {
-      id: '/_authenticated/customers/customerCrud'
-      path: '/customers/customerCrud'
-      fullPath: '/customers/customerCrud'
-      preLoaderRoute: typeof AuthenticatedCustomersCustomerCrudLazyImport
+    '/_authenticated/customers/customer-create': {
+      id: '/_authenticated/customers/customer-create'
+      path: '/customers/customer-create'
+      fullPath: '/customers/customer-create'
+      preLoaderRoute: typeof AuthenticatedCustomersCustomerCreateLazyImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/customers/customer-edit': {
+      id: '/_authenticated/customers/customer-edit'
+      path: '/customers/customer-edit'
+      fullPath: '/customers/customer-edit'
+      preLoaderRoute: typeof AuthenticatedCustomersCustomerEditLazyImport
       parentRoute: typeof AuthenticatedRouteImport
     }
     '/_authenticated/settings/account': {
@@ -571,7 +592,8 @@ const AuthenticatedSettingsRouteLazyRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteLazyRoute: typeof AuthenticatedSettingsRouteLazyRouteWithChildren
-  AuthenticatedCustomersCustomerCrudLazyRoute: typeof AuthenticatedCustomersCustomerCrudLazyRoute
+  AuthenticatedCustomersCustomerCreateLazyRoute: typeof AuthenticatedCustomersCustomerCreateLazyRoute
+  AuthenticatedCustomersCustomerEditLazyRoute: typeof AuthenticatedCustomersCustomerEditLazyRoute
   AuthenticatedAppsIndexLazyRoute: typeof AuthenticatedAppsIndexLazyRoute
   AuthenticatedChatsIndexLazyRoute: typeof AuthenticatedChatsIndexLazyRoute
   AuthenticatedCustomersIndexLazyRoute: typeof AuthenticatedCustomersIndexLazyRoute
@@ -585,8 +607,10 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteLazyRoute:
     AuthenticatedSettingsRouteLazyRouteWithChildren,
-  AuthenticatedCustomersCustomerCrudLazyRoute:
-    AuthenticatedCustomersCustomerCrudLazyRoute,
+  AuthenticatedCustomersCustomerCreateLazyRoute:
+    AuthenticatedCustomersCustomerCreateLazyRoute,
+  AuthenticatedCustomersCustomerEditLazyRoute:
+    AuthenticatedCustomersCustomerEditLazyRoute,
   AuthenticatedAppsIndexLazyRoute: AuthenticatedAppsIndexLazyRoute,
   AuthenticatedChatsIndexLazyRoute: AuthenticatedChatsIndexLazyRoute,
   AuthenticatedCustomersIndexLazyRoute: AuthenticatedCustomersIndexLazyRoute,
@@ -615,7 +639,8 @@ export interface FileRoutesByFullPath {
   '/404': typeof errors404LazyRoute
   '/503': typeof errors503LazyRoute
   '/': typeof authIndexRoute
-  '/customers/customerCrud': typeof AuthenticatedCustomersCustomerCrudLazyRoute
+  '/customers/customer-create': typeof AuthenticatedCustomersCustomerCreateLazyRoute
+  '/customers/customer-edit': typeof AuthenticatedCustomersCustomerEditLazyRoute
   '/settings/account': typeof AuthenticatedSettingsAccountLazyRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceLazyRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayLazyRoute
@@ -645,7 +670,8 @@ export interface FileRoutesByTo {
   '/404': typeof errors404LazyRoute
   '/503': typeof errors503LazyRoute
   '/': typeof authIndexRoute
-  '/customers/customerCrud': typeof AuthenticatedCustomersCustomerCrudLazyRoute
+  '/customers/customer-create': typeof AuthenticatedCustomersCustomerCreateLazyRoute
+  '/customers/customer-edit': typeof AuthenticatedCustomersCustomerEditLazyRoute
   '/settings/account': typeof AuthenticatedSettingsAccountLazyRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceLazyRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayLazyRoute
@@ -678,7 +704,8 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500LazyRoute
   '/(errors)/503': typeof errors503LazyRoute
   '/(auth)/': typeof authIndexRoute
-  '/_authenticated/customers/customerCrud': typeof AuthenticatedCustomersCustomerCrudLazyRoute
+  '/_authenticated/customers/customer-create': typeof AuthenticatedCustomersCustomerCreateLazyRoute
+  '/_authenticated/customers/customer-edit': typeof AuthenticatedCustomersCustomerEditLazyRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountLazyRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceLazyRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayLazyRoute
@@ -711,7 +738,8 @@ export interface FileRouteTypes {
     | '/404'
     | '/503'
     | '/'
-    | '/customers/customerCrud'
+    | '/customers/customer-create'
+    | '/customers/customer-edit'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
@@ -740,7 +768,8 @@ export interface FileRouteTypes {
     | '/404'
     | '/503'
     | '/'
-    | '/customers/customerCrud'
+    | '/customers/customer-create'
+    | '/customers/customer-edit'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
@@ -771,7 +800,8 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/(auth)/'
-    | '/_authenticated/customers/customerCrud'
+    | '/_authenticated/customers/customer-create'
+    | '/_authenticated/customers/customer-edit'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
@@ -852,7 +882,8 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/route.tsx",
       "children": [
         "/_authenticated/settings",
-        "/_authenticated/customers/customerCrud",
+        "/_authenticated/customers/customer-create",
+        "/_authenticated/customers/customer-edit",
         "/_authenticated/apps/",
         "/_authenticated/chats/",
         "/_authenticated/customers/",
@@ -913,8 +944,12 @@ export const routeTree = rootRoute
     "/(auth)/": {
       "filePath": "(auth)/index.tsx"
     },
-    "/_authenticated/customers/customerCrud": {
-      "filePath": "_authenticated/customers/customerCrud.lazy.tsx",
+    "/_authenticated/customers/customer-create": {
+      "filePath": "_authenticated/customers/customer-create.lazy.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/customers/customer-edit": {
+      "filePath": "_authenticated/customers/customer-edit.lazy.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/settings/account": {

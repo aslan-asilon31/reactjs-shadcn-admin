@@ -2,7 +2,8 @@ import LoadingSpinner from '@/components/loading-spinner1.gif';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { z } from 'zod';
-import './styles/customerCrud.css'
+// import './styles/customer-crud.css'
+
 import { Button } from "@/components/ui/button"
 
 
@@ -21,7 +22,7 @@ const customerSchema = z.object({
 });
 
 
-const customerCrud: React.FC = () => {
+const CustomerEdit: React.FC = () => {
     const [customer, setCustomer] = useState<Customer>({ name: '', balance: 0, is_activated: 1 });
     const [loading, setLoading] = useState<boolean>(false);
     const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -39,7 +40,7 @@ const customerCrud: React.FC = () => {
                 setLoading(true);
                 setError(null);
                 try {
-                    const response = await axios.get(`http://localhost:8000/api/customers/${id}`);
+                    const response = await axios.get(`http://localhost:8001/api/customers/${id}`);
                     setCustomer(response.data.data);
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 } catch (err) {
@@ -77,12 +78,13 @@ const customerCrud: React.FC = () => {
 
             
             if (isEditing) {
-                await axios.put(`http://localhost:8000/api/customers/${customer.id}`, customerData);
+                await axios.put(`http://localhost:8001/api/customers/${customer.id}`, customerData);
             } else {
-                await axios.post('http://localhost:8000/api/customers', customerData);
+                await axios.post('http://localhost:8001/api/customers', customerData);
             }
             // Redirect back to the list page after success
             // window.location.href = '/customers';
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (err) {
             setError('Failed to save customer data');
         } finally {
@@ -147,4 +149,4 @@ const customerCrud: React.FC = () => {
     );
 };
 
-export default customerCrud;
+export default CustomerEdit;
